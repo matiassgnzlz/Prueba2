@@ -1,0 +1,2 @@
+{"@timestamp":"2026-05-13T00:25:33.4453913-04:00","@version":"1","message":"POST /auth/login - usuario: matias","logger_name":"com.example.ms_auth.controller.AuthController","thread_name":"http-nio-8082-exec-2","level":"INFO","level_value":20000}
+{"@timestamp":"2026-05-13T00:34:41.121556-04:00","@version":"1","message":"POST /auth/login - usuario: matias","logger_name":"com.example.ms_auth.controller.AuthController","thread_name":"http-nio-8082-exec-7","level":"INFO","level_value":20000}
