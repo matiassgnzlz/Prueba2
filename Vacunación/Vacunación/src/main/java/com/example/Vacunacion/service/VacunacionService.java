@@ -18,12 +18,12 @@ public class VacunacionService {
 
     public Vacunacion crear(VacunacionDTO dto) {
 
-        Vacunacion vacuna = Vacunacion.builder()
-                .mascotaId(dto.getMascotaId())
-                .vacuna(dto.getVacuna())
-                .fechaAplicacion(dto.getFechaAplicacion())
-                .proximaDosis(dto.getProximaDosis())
-                .build();
+        Vacunacion vacuna = new Vacunacion();
+
+        vacuna.setMascotaId(dto.getMascotaId());
+        vacuna.setVacuna(dto.getVacuna());
+        vacuna.setFechaAplicacion(dto.getFechaAplicacion());
+        vacuna.setProximaDosis(dto.getProximaDosis());
 
         return repository.save(vacuna);
     }

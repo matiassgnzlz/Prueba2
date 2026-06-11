@@ -1,93 +1,61 @@
 package com.example.Vacunacion.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.Vacunacion.dto.VacunacionDTO;
 import com.example.Vacunacion.model.Vacunacion;
 import com.example.Vacunacion.service.VacunacionService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.models.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/vacunacion")
 @RequiredArgsConstructor
 public class VacunacionController {
+
     private final VacunacionService service;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<ApiResponse<Vacunacion>> crear(
+    public ResponseEntity<Vacunacion> crear(
             @Valid @RequestBody VacunacionDTO dto) {
 
-        return ResponseEntity.status(201).body(
-                ApiResponse.<Vacunacion>builder()
-                        .success(true)
-                        .message("Vacuna registrada")
-                        .data(service.crear(dto))
-                        .build()
-        );
+        return ResponseEntity.status(201)
+                .body(service.crear(dto));
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<ApiResponse<List<Vacunacion>>> listar() {
+    public ResponseEntity<List<Vacunacion>> listar() {
 
-        return ResponseEntity.ok(
-                ApiResponse.<List<Vacunacion>>builder()
-                        .success(true)
-                        .message("Listado obtenido")
-                        .data(service.listar())
-                        .build()
-        );
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Vacunacion>> obtener(@PathVariable Long id) {
+    public ResponseEntity<Vacunacion> obtener(
+            @PathVariable Long id) {
 
-        return ResponseEntity.ok(
-                ApiResponse.<Vacunacion>builder()
-                        .success(true)
-                        .message("Vacuna encontrada")
-                        .data(service.obtener(id))
-                        .build()
-        );
+        return ResponseEntity.ok(service.obtener(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Vacunacion>> actualizar(
+    public ResponseEntity<Vacunacion> actualizar(
             @PathVariable Long id,
             @RequestBody VacunacionDTO dto) {
 
         return ResponseEntity.ok(
-                ApiResponse.<Vacunacion>builder()
-                        .success(true)
-                        .message("Vacuna actualizada")
-                        .data(service.actualizar(id, dto))
-                        .build()
+                service.actualizar(id, dto)
         );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Long id) {
+    public ResponseEntity<String> eliminar(
+            @PathVariable Long id) {
 
         service.eliminar(id);
 
-        return ResponseEntity.ok(
-                ApiResponse.<Void>builder()
-                        .success(true)
-                        .message("Vacuna eliminada")
-                        .build()
-        );
+        return ResponseEntity.ok("Vacuna eliminada correctamente");
     }
 }

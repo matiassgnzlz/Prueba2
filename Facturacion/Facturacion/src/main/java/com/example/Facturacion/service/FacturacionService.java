@@ -10,23 +10,22 @@ import com.example.Facturacion.repository.FacturacionRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.Builder;
 
 @Service
 @RequiredArgsConstructor
 public class FacturacionService {
     private static final String Facturacion = null;
     private final FacturacionRepository repository;
-
+    
     public Facturacion crear(FacturacionDTO dto) {
+        
+        Facturacion factura = new Facturacion();
 
-        Facturacion factura = Facturacion.builder()
-            .mascotaId(dto.getMascotaId())
-            .citaId(dto.getCitaId())
-            .monto(dto.getMonto())
-            .estado(dto.getEstado())
-            .fecha(dto.getFecha())
-            .build();
+            factura.setMascotaId(dto.getMascotaId());
+            factura.setCitaId(dto.getCitaId());
+            factura.setMonto(dto.getMonto());
+            factura.setEstado(dto.getEstado());
+            factura.setFecha(dto.getFecha());
 
         return repository.save(factura);
     }
