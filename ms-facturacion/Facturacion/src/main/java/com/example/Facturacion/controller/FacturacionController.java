@@ -59,9 +59,5 @@ public class FacturacionController {
                 return ResponseEntity.ok("Factura eliminada correctamente");
         }
         
-        @GetMapping("/test")
-        public String test() {
-                return "MS-FACTURACION funcionando";
-        }
 
 }
