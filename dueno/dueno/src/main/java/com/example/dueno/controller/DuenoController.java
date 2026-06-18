@@ -11,11 +11,17 @@ import com.example.dueno.dto.DuenoDTO;
 import com.example.dueno.model.Dueno;
 import com.example.dueno.service.DuenoService;
 
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Duenos", description = "Operaciones relacionadas con duenos")
 @RestController
-@RequestMapping("/api/dueno")
+@RequestMapping("/api/v1/dueno")
 @RequiredArgsConstructor
 public class DuenoController {
 
@@ -51,15 +57,23 @@ public class DuenoController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<ApiResponse<Dueno>> obtener(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<EntityModel<Dueno>>> obtener(@PathVariable Long id) {
+
+    Dueno dueno = service.obtener(id);
+    EntityModel<Dueno> recurso = EntityModel.of(dueno);
+
+        recurso.add(linkTo(methodOn(DuenoController.class).obtener(id)).withSelfRel());
+        recurso.add(linkTo(methodOn(DuenoController.class).listar()).withRel("all"));
+        recurso.add(linkTo(methodOn(DuenoController.class).actualizar(id, null)).withRel("update"));
+        recurso.add(linkTo(methodOn(DuenoController.class).eliminar(id)).withRel("delete"));
 
         return ResponseEntity.ok(
-                ApiResponse.<Dueno>builder()
-                        .success(true)
-                        .message("Dueno obtenido")
-                        .data(service.obtener(id))
-                        .build()
-        );
+            ApiResponse.<EntityModel<Dueno>>builder()
+                .success(true)
+                .message("Dueno obtenido")
+                .data(recurso)
+                .build()
+    );
     }
 
     @PutMapping("/{id}")
