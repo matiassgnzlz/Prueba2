@@ -13,7 +13,7 @@ public class VeterinarioClient {
 
     private final WebClient webClient;
 
-    private final String BASE_URL = "http://localhost:8085/api/veterinarios";
+    private final String BASE_URL = "http://localhost:8085/api/v1/veterinario";
 
     public VeterinarioResponse obtenerVeterinario(Long id, String token) {
         try {

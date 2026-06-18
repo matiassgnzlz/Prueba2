@@ -1,8 +1,7 @@
 package com.example.citas.dto;
 
+import lombok.Data;
 import java.time.LocalDateTime;
-
-import lombok.*;
 
 @Data
 public class CitasResponse {
@@ -11,9 +10,12 @@ public class CitasResponse {
     private String motivo;
     private String tipo;
     private String estado;
+    
     private Long mascotaId;
-    private Long veterinarioId; 
-    private Long duenoId;       
-
-    private VeterinarioResponse veterinario;
+    private Long veterinarioId;
+    private Long duenoId;
+    
+    // Asegúrate de que existan estas dos propiedades como objetos complejos:
+    private VeterinarioResponse veterinario;  
+    private MascotaResponse mascota; 
 }
