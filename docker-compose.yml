@@ -1,0 +1,222 @@
+services:
+  # --- BASES DE DATOS MYSQL ---
+  mysql-dueno:
+    image: mysql:8
+    container_name: mysql-dueno
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes" 
+      MYSQL_DATABASE: ms-dueno
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_dueno_data:/var/lib/mysql
+    networks:
+      - backend-network
+
+  mysql-mascota:
+    image: mysql:8
+    container_name: mysql-mascota
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ms-mascota
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_mascota_data:/var/lib/mysql
+    networks:
+      - backend-network
+
+  mysql-veterinario:
+    image: mysql:8
+    container_name: mysql-veterinario
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ms-veterinario
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_veterinario_data:/var/lib/mysql
+    networks:
+      - backend-network
+
+  mysql-citas:
+    image: mysql:8
+    container_name: mysql-citas
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ms-citas
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql_citas_data:/var/lib/mysql
+    networks:
+      - backend-network
+
+  mysql-historiaclinica:
+    image: mysql:8
+    container_name: mysql-historiaclinica
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ms-historiaclinica
+    ports:
+      - "3311:3306"
+    volumes:
+      - mysql_historiaclinica_data:/var/lib/mysql
+    networks:
+      - backend-network
+
+  # --- INFRAESTRUCTURA ---
+  ms-eureka:
+    build: ./ms-eureka/ms-eureka/ms-eureka
+    container_name: ms-eureka
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    networks:
+      - backend-network
+
+  ms-gateway:
+    build: ./ms-gateway/ms-gateway
+    container_name: ms-gateway
+    restart: unless-stopped
+    ports:
+      - "8079:8079"
+    environment:
+      EUREKA_URL: http://ms-eureka:8761/eureka/
+    depends_on:
+      - ms-eureka
+    networks:
+      - backend-network
+
+  # --- APLICACIONES VETERINARIAS ---
+  ms-auth:
+    build:
+      context: ./ms-auth
+      dockerfile: Dockerfile
+    container_name: ms-auth
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      DB_HOST: mysql-dueno
+      DB_PORT: 3306
+      DB_NAME: ms-user?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      DB_USER: root
+      DB_PASSWORD: ""
+      EUREKA_URL: http://ms-eureka:8761/eureka/
+      JWT_SECRET: clave_super_secreta_12345678901234567890
+    depends_on:
+      - mysql-dueno
+      - ms-eureka
+    networks:
+      - backend-network
+
+  ms-dueno:
+    build: ./dueno/dueno 
+    container_name: ms-dueno
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      DB_HOST: mysql-dueno
+      DB_PORT: 3306
+      DB_NAME: ms-dueno
+      DB_USER: root
+      DB_PASSWORD: ""
+      EUREKA_URL: http://ms-eureka:8761/eureka/
+    depends_on:
+      - mysql-dueno
+      - ms-eureka
+    networks:
+      - backend-network
+
+  ms-mascota:
+    build: ./mascota/mascota
+    container_name: ms-mascota
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      DB_HOST: mysql-mascota
+      DB_PORT: 3306
+      DB_NAME: ms-mascota
+      DB_USER: root
+      DB_PASSWORD: ""
+      EUREKA_URL: http://ms-eureka:8761/eureka/
+    depends_on:
+      - mysql-mascota
+      - ms-eureka
+    networks:
+      - backend-network
+
+  ms-veterinario:
+    build: ./veterinario/veterinario
+    container_name: ms-veterinario
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    environment:
+      DB_HOST: mysql-veterinario
+      DB_PORT: 3306
+      DB_NAME: ms-veterinario
+      DB_USER: root
+      DB_PASSWORD: ""
+      EUREKA_URL: http://ms-eureka:8761/eureka/
+    depends_on:
+      - mysql-veterinario
+      - ms-eureka
+    networks:
+      - backend-network
+
+  ms-citas:
+    build: ./citas/citas/citas
+    container_name: ms-citas
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      DB_HOST: mysql-citas
+      DB_PORT: 3306
+      DB_NAME: ms-citas
+      DB_USER: root
+      DB_PASSWORD: ""
+      EUREKA_URL: http://ms-eureka:8761/eureka/
+    depends_on:
+      - mysql-citas
+      - ms-eureka
+    networks:
+      - backend-network
+
+  ms-historiaclinica:
+    build: ./HistoriaClinica/HistoriaClinica
+    container_name: ms-historiaclinica
+    restart: unless-stopped
+    ports:
+      - "8087:8087"
+    environment:
+      DB_HOST: mysql-historiaclinica
+      DB_PORT: 3306
+      DB_NAME: ms-historiaclinica
+      DB_USER: root
+      DB_PASSWORD: ""
+      EUREKA_URL: http://ms-eureka:8761/eureka/
+    depends_on:
+      - mysql-historiaclinica
+      - ms-eureka
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+
+volumes:
+  mysql_dueno_data:
+  mysql_mascota_data:
+  mysql_veterinario_data:
+  mysql_citas_data:
+  mysql_historiaclinica_data:
