@@ -2,7 +2,6 @@ package com.example.veterinario.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static net.logstash.logback.argument.StructuredArguments.keyValue;
 
@@ -18,8 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class VeterinarioService {
 
-    @Autowired
-    private VeterinarioRepository repository;
+    private final VeterinarioRepository repository;
+
+    VeterinarioService(VeterinarioRepository repository) {
+        this.repository = repository;
+    }
 
     public VeterinarioResponse crear(VeterinarioDTO dto, String token) {
         log.info("Crear Veterinario", keyValue("nombre", dto.getNombre()), keyValue("matricula", dto.getMatricula()));
@@ -69,14 +71,10 @@ public class VeterinarioService {
         return mapToResponse(repository.save(v), token);
     }
 
-    public void eliminar(Long id) {
-        log.info("Eliminar Veterinario", keyValue("id", id));
-        
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Veterinario no encontrado");
-        }
-        
-        repository.deleteById(id);
+public void eliminar(Long id) {
+        Veterinario v = repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Veterinario no encontrado"));
+        repository.delete(v);
     }
 
     private VeterinarioResponse mapToResponse(Veterinario v, String token) {

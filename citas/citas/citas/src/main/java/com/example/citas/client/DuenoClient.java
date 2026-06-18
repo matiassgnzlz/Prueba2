@@ -14,7 +14,7 @@ public class DuenoClient {
 
     private final WebClient webClient;
 
-    private final String BASE_URL = "http://localhost:8083/api/dueno/";
+    private final String BASE_URL = "http://localhost:8083/api/v1/dueno/";
 
     public DuenoResponse obtenerDueno(Long id, String token) {
 

@@ -49,12 +49,12 @@ public class MascotaService {
     }
 
     public MascotaResponse obtener(Long id, String token) {
-
         Mascota mascota = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Mascota no encontrado"));
-
+            .orElseThrow(() -> new EntityNotFoundException("Mascota no encontrado"));
+        
+        // Usamos tu método para transformarla en MascotaResponse con su dueño correspondiente
         return mapToResponse(mascota, token);
-    }
+}
 
     public MascotaResponse actualizar(Long id, MascotaDTO dto, String token) {
 
@@ -79,16 +79,15 @@ public class MascotaService {
         repository.deleteById(id);
     }
 
-    private MascotaResponse mapToResponse(Mascota mascota, String token) {
+private MascotaResponse mapToResponse(Mascota mascota, String token) {
+    var dueno = duenoClient.obtenerDueno(mascota.getDuenoId(), token);
 
-        var dueno = duenoClient.obtenerDueno(mascota.getDuenoId(), token);
-
-        return MascotaResponse.builder()
-                .id(mascota.getId())
-                .nombre(mascota.getNombre())
-                .especie(mascota.getEspecie())
-                .raza(mascota.getRaza())
-                .dueno(dueno)
-                .build();
-    }
+    return MascotaResponse.builder()
+            .id(mascota.getId())
+            .nombre(mascota.getNombre())
+            .especie(mascota.getEspecie())
+            .raza(mascota.getRaza())
+            .dueno(dueno)
+            .build();
+}
 }

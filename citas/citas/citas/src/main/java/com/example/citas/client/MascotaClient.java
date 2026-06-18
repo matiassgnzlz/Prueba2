@@ -23,7 +23,7 @@ public class MascotaClient {
                 new ParameterizedTypeReference<ApiResponse<MascotaResponse>>() {};
 
             ApiResponse<MascotaResponse> response = webClient.get()
-                    .uri("http://localhost:8084/api/mascota/{id}", id)
+                    .uri("http://localhost:8084/api/v1/mascota/{id}", id)
                     .header("Authorization", tokenLimpio)
                     .retrieve()
                     .bodyToMono(typeRef) 

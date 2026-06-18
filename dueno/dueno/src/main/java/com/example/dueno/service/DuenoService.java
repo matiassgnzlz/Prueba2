@@ -42,7 +42,7 @@ public class DuenoService {
         log.info("Obtener Dueño", keyValue("id", id));
 
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Autor no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Dueno no encontrado"));
     }
 
     public Dueno actualizar(Long id, DuenoDTO dto) {

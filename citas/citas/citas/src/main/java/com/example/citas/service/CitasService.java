@@ -82,13 +82,45 @@ public class CitasService {
         res.setTipo(citas.getTipo());
         res.setEstado(citas.getEstado());
         
-
         res.setMascotaId(citas.getMascotaId());
         res.setVeterinarioId(citas.getVeterinarioId());
         res.setDuenoId(citas.getDuenoId());
             
         res.setVeterinario(v);  
-        
+        res.setMascota(m);
         return res;
     }
+
+    public CitasResponse actualizarCita(Long id, CitasDTO dto, String token) {
+        Citas cita = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada para actualizar"));
+
+        // Actualizamos los datos generales de la cita
+        cita.setFechaHora(dto.getFechaHora());
+        cita.setMotivo(dto.getMotivo());
+        cita.setTipo(dto.getTipo());
+        
+        // Actualizamos las llaves foráneas/IDs relacionales si cambiaron
+        cita.setMascotaId(dto.getMascotaId());
+        cita.setVeterinarioId(dto.getVeterinarioId());
+        cita.setDuenoId(dto.getDuenoId());
+
+        // Guardamos los cambios en la base de datos
+        Citas actualizada = repository.save(cita);
+
+        // Volvemos a consumir los clientes Feign con la información actualizada
+        MascotaResponse m = mascotaClient.obtenerMascota(actualizada.getMascotaId(), token);
+        VeterinarioResponse v = veterinarioClient.obtenerVeterinario(actualizada.getVeterinarioId(), token);
+
+        return construirRespuesta(actualizada, m, v);
+    }
+    public void eliminarCita(Long id, String token) {
+        Citas cita = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada para eliminar"));
+        
+        repository.delete(cita);
+    }
+
+
+
 }

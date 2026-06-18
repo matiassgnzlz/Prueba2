@@ -8,11 +8,11 @@ CREATE TABLE receta (
     nom_mascota VARCHAR(255) NOT NULL,
     descripcion VARCHAR(500),
     fec_emision TIMESTAMP NOT NULL,
-    firma_digital VARCHAR(255)
+    firma_digital VARCHAR(255));
 
 --changeset fran:2
 
-INSERT INTO certificado (dueno_id, nom_mascota, descripcion, fec_emision, firma_digital)
+INSERT INTO receta (dueno_id, nom_mascota, descripcion, fec_emision, firma_digital)
 VALUES
 (1, 'Firulais', 'Vacunación completa al día', '2026-05-01 10:30:00', 'FIRMA001'),
 
@@ -33,5 +33,3 @@ VALUES
 (9, 'Simba', 'Peso y alimentación controlados', '2026-05-09 12:25:00', 'FIRMA009'),
 
 (10, 'Pelusa', 'Examen general sin observaciones', '2026-05-10 17:50:00', 'FIRMA010');
-
-);

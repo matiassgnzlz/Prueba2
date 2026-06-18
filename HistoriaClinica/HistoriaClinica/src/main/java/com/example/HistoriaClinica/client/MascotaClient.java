@@ -15,7 +15,7 @@ public class MascotaClient {
 
     private final WebClient webClient;
     // Puerto 8083 (Mascotas), no 8084
-    private final String BASE_URL = "http://localhost:8084/api/mascotas/";
+    private final String BASE_URL = "http://ms-mascota:8084/api/v1/mascota/";
 
     public MascotaResponse obtenerMascota(Long id, String token) {
         try {
