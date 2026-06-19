@@ -43,7 +43,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String token = header.substring(7);
 
-            // 🚨 Evita doble autenticación
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 if (jwtUtil.esValido(token)) {

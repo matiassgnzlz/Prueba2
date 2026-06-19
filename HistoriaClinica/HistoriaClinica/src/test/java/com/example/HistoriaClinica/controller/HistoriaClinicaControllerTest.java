@@ -44,14 +44,12 @@ class HistoriaClinicaControllerTest {
 
     @Test
     void debeGuardarHistoriaClinica() throws Exception {
-        // Arrange
         HistoriaClinica historia = new HistoriaClinica();
         historia.setMascotaId(1L);
         historia.setDescripcion("Nueva historia");
 
         when(service.guardar(any(HistoriaClinica.class), any(String.class))).thenReturn(historia);
 
-        // Act & Assert
         mockMvc.perform(post("/api/v1/historiaclinica")
                 .header("Authorization", TOKEN_SIMULADO)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,7 +61,6 @@ class HistoriaClinicaControllerTest {
 
     @Test
     void debeObtenerHistoriaCompleta() throws Exception {
-        // Arrange
         HistoriaClinicaDTO dto = new HistoriaClinicaDTO();
         dto.setId(1L);
         dto.setDescripcion("Historia Clinica Completa");
@@ -74,7 +71,6 @@ class HistoriaClinicaControllerTest {
 
         when(service.obtenerHistoriaCompleta(eq(1L), any(String.class))).thenReturn(dto);
 
-        // Act & Assert
         mockMvc.perform(get("/api/v1/historiaclinica/1")
                 .header("Authorization", TOKEN_SIMULADO))
                 .andExpect(status().isOk())
@@ -86,14 +82,13 @@ class HistoriaClinicaControllerTest {
 
     @Test
     void debeListarPorMascota() throws Exception {
-        // Arrange
         HistoriaClinica historia = new HistoriaClinica();
         historia.setId(1L);
         historia.setMascotaId(5L);
 
         when(service.findByMascota(eq(5L))).thenReturn(List.of(historia));
 
-        // Act & Assert
+        
         mockMvc.perform(get("/api/v1/historiaclinica/mascota/5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].mascotaId").value(5));
@@ -101,7 +96,6 @@ class HistoriaClinicaControllerTest {
 
     @Test
     void debeActualizarHistoriaClinica() throws Exception {
-        // Arrange
         HistoriaClinica historia = new HistoriaClinica();
         historia.setId(1L);
         historia.setMascotaId(1L);
@@ -113,7 +107,6 @@ class HistoriaClinicaControllerTest {
 
         when(service.actualizar(any(), any(), any())).thenReturn(dtoRespuesta);
 
-        // Act & Assert
         mockMvc.perform(put("/api/v1/historiaclinica/1")
                 .header("Authorization", TOKEN_SIMULADO)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -124,10 +117,8 @@ class HistoriaClinicaControllerTest {
 
     @Test
     void debeEliminarHistoriaClinica() throws Exception {
-        // Arrange
         doNothing().when(service).eliminar(eq(1L), any(String.class));
 
-        // Act & Assert
         mockMvc.perform(delete("/api/v1/historiaclinica/1")
                 .header("Authorization", TOKEN_SIMULADO))
                 .andExpect(status().isOk())

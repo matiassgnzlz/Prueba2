@@ -12,7 +12,6 @@ import java.util.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 🔴 VALIDACIONES (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Object>> handleValidation(MethodArgumentNotValidException ex) {
 
@@ -30,7 +29,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 🔎 404
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Object>> handleNotFound(RuntimeException ex) {
         return ResponseEntity.status(404).body(
@@ -51,7 +49,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 💥 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleGeneral(Exception ex) {
         return ResponseEntity.status(500).body(

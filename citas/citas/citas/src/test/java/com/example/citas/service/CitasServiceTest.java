@@ -41,7 +41,6 @@ public class CitasServiceTest {
 
     @Test
     void debeRetornarTodasLasCitas() {
-        // Arrange
         Citas cita1 = new Citas();
         cita1.setId(1L);
         cita1.setMotivo("Vacunación");
@@ -52,10 +51,8 @@ public class CitasServiceTest {
         when(mascotaClient.obtenerMascota(anyLong(), anyString())).thenReturn(new MascotaResponse());
         when(veterinarioClient.obtenerVeterinario(anyLong(), anyString())).thenReturn(new VeterinarioResponse());
 
-        // Act
         List<CitasResponse> resultado = citasService.obtenerTodas("mock-token"); 
 
-        // Assert
         assertThat(resultado).hasSize(1);
         assertThat(resultado.get(0).getMotivo()).isEqualTo("Vacunación");
         verify(citasRepository, times(1)).findAll();
@@ -63,7 +60,6 @@ public class CitasServiceTest {
 
     @Test
     void debeBuscarCitaPorIdExitosamente() {
-        // Arrange
         Citas cita = new Citas();
         cita.setId(1L);
         cita.setMotivo("Revisión dental");
@@ -74,10 +70,8 @@ public class CitasServiceTest {
         when(mascotaClient.obtenerMascota(anyLong(), anyString())).thenReturn(new MascotaResponse());
         when(veterinarioClient.obtenerVeterinario(anyLong(), anyString())).thenReturn(new VeterinarioResponse());
 
-        // Act
         CitasResponse resultado = citasService.obtenerPorId(1L, "mock-token");
 
-        // Assert
         assertThat(resultado).isNotNull();
         assertThat(resultado.getMotivo()).isEqualTo("Revisión dental");
         verify(citasRepository, times(1)).findById(1L);
@@ -85,7 +79,6 @@ public class CitasServiceTest {
 
     @Test
     void debeAgendarUnaNuevaCitaExitosamente() {
-        // Arrange
         CitasDTO dto = new CitasDTO();
         dto.setMotivo("Urgencia");
         dto.setMascotaId(10L);
@@ -103,10 +96,8 @@ public class CitasServiceTest {
         when(mascotaClient.obtenerMascota(anyLong(), anyString())).thenReturn(new MascotaResponse());
         when(veterinarioClient.obtenerVeterinario(anyLong(), anyString())).thenReturn(new VeterinarioResponse());
 
-        // Act
         CitasResponse resultado = citasService.agendarCitas(dto, "mock-token");
 
-        // Assert
         assertThat(resultado).isNotNull();
         assertThat(resultado.getId()).isEqualTo(100L);
         assertThat(resultado.getMotivo()).isEqualTo("Urgencia");

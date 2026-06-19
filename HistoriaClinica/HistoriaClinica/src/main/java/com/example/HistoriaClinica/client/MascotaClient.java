@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class MascotaClient {
 
     private final WebClient webClient;
-    // Puerto 8083 (Mascotas), no 8084
+    // Puerto 8083 (Mascotas
     private final String BASE_URL = "http://ms-mascota:8084/api/v1/mascota/";
 
     public MascotaResponse obtenerMascota(Long id, String token) {

@@ -15,7 +15,6 @@ public class CitasResponse {
     private Long veterinarioId;
     private Long duenoId;
     
-    // Asegúrate de que existan estas dos propiedades como objetos complejos:
     private VeterinarioResponse veterinario;  
     private MascotaResponse mascota; 
 }
