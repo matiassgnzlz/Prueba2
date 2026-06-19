@@ -1,56 +1,70 @@
 package com.example.Vacunacion.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.example.Vacunacion.dto.VacunacionDTO;
 import com.example.Vacunacion.model.Vacunacion;
 import com.example.Vacunacion.repository.VacunacionRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class VacunacionService {
-    private final VacunacionRepository repository;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-    public Vacunacion crear(VacunacionDTO dto) {
+@ExtendWith(MockitoExtension.class)
+class VacunacionServiceTest {
 
-        Vacunacion vacuna = new Vacunacion();
+    @Mock
+    private VacunacionRepository repository;
 
-        vacuna.setMascotaId(dto.getMascotaId());
-        vacuna.setVacuna(dto.getVacuna());
-        vacuna.setFechaAplicacion(dto.getFechaAplicacion());
-        vacuna.setProximaDosis(dto.getProximaDosis());
+    @InjectMocks
+    private VacunacionService service;
 
-        return repository.save(vacuna);
+    @Test
+    void debeGuardarVacunacion() {
+
+        Vacunacion vacunacion = new Vacunacion();
+        vacunacion.setId(1L);
+
+        when(repository.save(any(Vacunacion.class)))
+                .thenReturn(vacunacion);
+
+        Vacunacion resultado =
+                service.guardar(vacunacion);
+
+        assertNotNull(resultado);
     }
 
-    public List<Vacunacion> listar() {
-        return repository.findAll();
+    @Test
+    void debeListarVacunaciones() {
+
+        Vacunacion vacunacion = new Vacunacion();
+        vacunacion.setId(1L);
+
+        when(repository.findAll())
+                .thenReturn(List.of(vacunacion));
+
+        List<Vacunacion> resultado =
+                service.listar();
+
+        assertEquals(1, resultado.size());
     }
 
-    public Vacunacion obtener(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Vacuna no encontrada"));
-    }
+    @Test
+    void debeBuscarVacunacionPorId() {
 
-    public Vacunacion actualizar(Long id, VacunacionDTO dto) {
+        Vacunacion vacunacion = new Vacunacion();
+        vacunacion.setId(1L);
 
-        Vacunacion vacuna = obtener(id);
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(vacunacion));
 
-        vacuna.setMascotaId(dto.getMascotaId());
-        vacuna.setVacuna(dto.getVacuna());
-        vacuna.setFechaAplicacion(dto.getFechaAplicacion());
-        vacuna.setProximaDosis(dto.getProximaDosis());
+        Vacunacion resultado =
+                service.buscarPorId(1L);
 
-        return repository.save(vacuna);
-    }
-
-    public void eliminar(Long id) {
-        repository.deleteById(id);
+        assertNotNull(resultado);
     }
 }

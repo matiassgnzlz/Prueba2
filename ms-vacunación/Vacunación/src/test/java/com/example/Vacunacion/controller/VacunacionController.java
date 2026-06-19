@@ -1,65 +1,81 @@
 package com.example.Vacunacion.controller;
 
-import com.example.Vacunacion.dto.VacunacionDTO;
 import com.example.Vacunacion.model.Vacunacion;
 import com.example.Vacunacion.service.VacunacionService;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RestController
-@RequestMapping("/api/vacunacion")
-@RequiredArgsConstructor
-public class VacunacionController {
+@ExtendWith(MockitoExtension.class)
+class VacunacionControllerTest {
 
-    private final VacunacionService service;
+    private MockMvc mockMvc;
 
-    @PostMapping
-    public ResponseEntity<Vacunacion> crear(
-            @Valid @RequestBody VacunacionDTO dto) {
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-        return ResponseEntity.status(201)
-                .body(service.crear(dto));
+    @Mock
+    private VacunacionService service;
+
+    @InjectMocks
+    private VacunacionController controller;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<Vacunacion>> listar() {
+    @Test
+    void debeGuardarVacunacion() throws Exception {
 
-        return ResponseEntity.ok(service.listar());
+        Vacunacion vacunacion = new Vacunacion();
+        vacunacion.setId(1L);
+
+        when(service.guardar(any(Vacunacion.class))).thenReturn(vacunacion);
+
+        mockMvc.perform(post("/api/vacunaciones")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vacunacion)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Vacunacion> obtener(
-            @PathVariable Long id) {
+    @Test
+    void debeListarVacunaciones() throws Exception {
 
-        return ResponseEntity.ok(service.obtener(id));
+        Vacunacion vacunacion = new Vacunacion();
+        vacunacion.setId(1L);
+
+        when(service.listar()).thenReturn(List.of(vacunacion));
+
+        mockMvc.perform(get("/api/vacunaciones"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Vacunacion> actualizar(
-            @PathVariable Long id,
-            @RequestBody VacunacionDTO dto) {
+    @Test
+    void debeBuscarVacunacionPorId() throws Exception {
 
-        return ResponseEntity.ok(
-                service.actualizar(id, dto)
-        );
-    }
+        Vacunacion vacunacion = new Vacunacion();
+        vacunacion.setId(1L);
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminar(
-            @PathVariable Long id) {
+        when(service.buscarPorId(1L)).thenReturn(vacunacion);
 
-        service.eliminar(id);
-
-        return ResponseEntity.ok("Vacuna eliminada correctamente");
-    }
-    @GetMapping("/test")
-    public String test() {
-        return "MS-VACUNACION funcionando correctamente";
+        mockMvc.perform(get("/api/vacunaciones/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 }
