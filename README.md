@@ -34,3 +34,7 @@ Este es un sistema integral para la gestión de una clínica veterinaria basado 
 docker compose up -d --build
 4. Para limpiar docker:
 docker compose down -v
+
+#Swagger
+http://localhost:8082/swagger-ui.html
+-Para poder abrir el swagger utilizar esa url y solo cambiar el localhost
