@@ -1,4 +1,4 @@
- package com.veterinaria.vet_farmacia.dto;
+package com.veterinaria.vet_farmacia.dto;
 
  
 import com.veterinaria.vet_farmacia.model.Empleado;

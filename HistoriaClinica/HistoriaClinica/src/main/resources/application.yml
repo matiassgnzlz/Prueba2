@@ -1,0 +1,31 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: ms-historiaclinica
+  
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ms-historiaclinica}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
+  
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+  
+  flyway:
+    enabled: true
+
+jwt:
+  secret: ${JWT_SECRET:clave_super_secreta_12345678901234567890}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
